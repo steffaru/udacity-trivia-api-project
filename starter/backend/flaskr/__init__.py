@@ -82,13 +82,12 @@ def create_app(test_config=None):
   '''
   @app.route('/api/questions/<int:question_id>', methods=['DELETE'])
   def delete_question(question_id):
-    question = Question.query.filter_by(id=question_id).first()
-    question.delete()
+    #question = Question.query.filter_by(id=question_id).first()
+    #question.delete()
 
     return jsonify({
       'success': True,
-      'question': question.id,
-      'total_questions': len(formatted_questions),
+      'question': question_id,
       'deleted':'succesfully'
 
     })
@@ -104,15 +103,14 @@ def create_app(test_config=None):
   '''
   @app.route('/api/questions/create', methods=['POST'])
   def new_question():
-    question = {}
-    question.__init__()
-    question.insert()
+    # question = {}
+    # question.__init__()
+    # question.insert()
 
     return jsonify({
       'success': True,
-      'question': question.id,
-      'total_questions': len(formatted_questions),
-      'question':'created'
+      'question': 'question_id',
+      'question':'SHJASHFASJ, LISTO'
 
     })
 
@@ -128,28 +126,14 @@ def create_app(test_config=None):
   '''
   @app.route('/api/questions/search', methods=['POST'])
   def search_questions():
-    search_term = request.form.get('search_term')
-    search = "%{}%".format(search_term.replace(" ", "\ "))
-    data = Question.query.filter(Question.question.match(search)).order_by('question').all()
-    items = []
-  '''a revisar  for row in data:
-    aux = {
-      "id": row.id,
-      "question": row.question,
-      "num_questions": len(row.questions)
-    }
-    items.append(aux)
-
-  response={
-    "count": len(items),
-    "data": items
-  }
-  return render_template('pages/search_venues.html', results=response, search_term=request.form.get('search_term', ''))
-'''
+    # search_term = request.form.get('search_term')
+    # search = "%{}%".format(search_term.replace(" ", "\ "))
+    # data = Question.query.filter(Question.question.match(search)).order_by('question').all()
+    # items = []
     return jsonify({
       'success': True,
-      'question_search': question.id,
-      'total_questions': len(formatted_questions),
+      'question_search': 'question.id',
+      'total_questions': 'len(formatted_questions)',
       'question':'searched'
 
     })
@@ -161,13 +145,13 @@ def create_app(test_config=None):
   categories in the left column will cause only questions of that 
   category to be shown. 
   '''
-  @app.route('/api/questions/<string=question_category>', methods=['GET'])
+  @app.route('/api/questions/<string:question_category>', methods=['GET'])
   def get_questions_by_categories(question_category):
-    page = request.args.get('page', 1, type=int)
-    start = (page -1) * QUESTIONS_PER_PAGE
-    end = start + QUESTIONS_PER_PAGE
-    questions = Question.query.filter_by(id=question_category).all()
-    formatted_questions = [question.format() for question in questions]
+    # page = request.args.get('page', 1, type=int)
+    # start = (page -1) * QUESTIONS_PER_PAGE
+    # end = start + QUESTIONS_PER_PAGE
+    # questions = Question.query.filter_by(category=question_category).all()
+    # formatted_questions = [question.format() for question in questions]
 
     return jsonify({
       'success': True,
@@ -187,7 +171,17 @@ def create_app(test_config=None):
   one question at a time is displayed, the user is allowed to answer
   and shown whether they were correct or not. 
   '''
-  
+  @app.route('/api/quiz', methods=['POST'])
+  def post_quiz_questions():
+    data = {}
+
+    return jsonify({
+      'success': True,
+      'question': 'question random',
+      'category': 'categoriiiitas',
+      'question_returned': 'Xd'
+    })
+
   '''
   @TODO: 
   Create error handlers for all expected errors 
