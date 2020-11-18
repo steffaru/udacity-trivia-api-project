@@ -3,7 +3,8 @@ import $ from 'jquery';
 
 import '../stylesheets/QuizView.css';
 
-const questionsPerPlay = 5; 
+const questionsPerPlay = 5;
+const baseUrl = "http://127.0.0.1:5000/api/";
 
 class QuizView extends Component {
   constructor(props){
@@ -21,11 +22,18 @@ class QuizView extends Component {
   }
 
   componentDidMount(){
+    var callback = 'c'+Math.floor((Math.random()*100000000)+1);
     $.ajax({
-      url: `/categories`, //TODO: update request URL
+      url: baseUrl + 'categories',
       type: "GET",
+      jsonpCallback: callback,
+      dataType: 'json',
       success: (result) => {
-        this.setState({ categories: result.categories })
+        let cats = [];
+        for (let i in result.categories) {
+          cats[result.categories[i].id] = result.categories[i].type;
+        }
+        this.setState({ 'categories': cats });
         return;
       },
       error: (error) => {
@@ -46,20 +54,22 @@ class QuizView extends Component {
   getNextQuestion = () => {
     const previousQuestions = [...this.state.previousQuestions]
     if(this.state.currentQuestion.id) { previousQuestions.push(this.state.currentQuestion.id) }
+    var callback = 'c'+Math.floor((Math.random()*100000000)+1);
 
     $.ajax({
-      url: '/quizzes', //TODO: update request URL
-      type: "POST",
-      dataType: 'json',
+      url: baseUrl + 'quizzes',
+      // dataType: 'jsonp',
+      // jsonpCallback: callback,
+      crossDomain: true,
       contentType: 'application/json',
+      type: "POST",
       data: JSON.stringify({
         previous_questions: previousQuestions,
         quiz_category: this.state.quizCategory
       }),
-      xhrFields: {
-        withCredentials: true
-      },
-      crossDomain: true,
+      // xhrFields: {
+      //   withCredentials: true
+      // },
       success: (result) => {
         this.setState({
           showAnswer: false,

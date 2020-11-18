@@ -5,6 +5,8 @@ import Question from './Question';
 import Search from './Search';
 import $ from 'jquery';
 
+const baseUrl = "http://127.0.0.1:5000/api/";
+
 class QuestionView extends Component {
   constructor(){
     super();
@@ -22,14 +24,21 @@ class QuestionView extends Component {
   }
 
   getQuestions = () => {
+    var callback = 'c'+Math.floor((Math.random()*100000000)+1);
     $.ajax({
-      url: `/questions?page=${this.state.page}`, //TODO: update request URL
+      url: `${baseUrl}questions?page=${this.state.page}`, //TODO: update request URL
       type: "GET",
+      jsonpCallback: callback,
+      dataType: 'json',
       success: (result) => {
+        let cats = [];
+        for (let i in result.categories) {
+          cats[result.categories[i].id] = result.categories[i].type;
+        }
         this.setState({
           questions: result.questions,
           totalQuestions: result.total_questions,
-          categories: result.categories,
+          categories: cats,
           currentCategory: result.current_category })
         return;
       },
@@ -59,9 +68,12 @@ class QuestionView extends Component {
   }
 
   getByCategory= (id) => {
+    var callback = 'c'+Math.floor((Math.random()*100000000)+1);
     $.ajax({
-      url: `/categories/${id}/questions`, //TODO: update request URL
+      url: `${baseUrl}category/${id}/questions`, //TODO: update request URL
       type: "GET",
+      jsonpCallback: callback,
+      dataType: 'json',
       success: (result) => {
         this.setState({
           questions: result.questions,
@@ -78,14 +90,15 @@ class QuestionView extends Component {
 
   submitSearch = (searchTerm) => {
     $.ajax({
-      url: `/questions`, //TODO: update request URL
+      url: `${baseUrl}questions/search`, //TODO: update request URL
       type: "POST",
       dataType: 'json',
+      crossDomain: true,
       contentType: 'application/json',
       data: JSON.stringify({searchTerm: searchTerm}),
-      xhrFields: {
-        withCredentials: true
-      },
+      // xhrFields: {
+      //   withCredentials: true
+      // },
       crossDomain: true,
       success: (result) => {
         this.setState({

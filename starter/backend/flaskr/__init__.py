@@ -23,12 +23,12 @@ def create_app(test_config=None):
   # create and configure the app
   app = Flask(__name__)
   setup_db(app)
-  CORS(app)
+  #CORS(app)
 
   '''
   @TODO: Set up CORS. Allow '*' for origins. Delete the sample route after completing the TODOs
   '''
-  #cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
+  cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
   '''
   @TODO: Use the after_request decorator to set Access-Control-Allow
   '''
@@ -92,8 +92,8 @@ def create_app(test_config=None):
 
       return jsonify({
         'success': True,
-        'list_questions': formatted_questions[start:end],
-        'number_total_questions': len(formatted_questions),
+        'questions': formatted_questions[start:end],
+        'total_questions': len(formatted_questions),
         'current_category': current_categories,
         'categories': formatted_categories[start:end]
       })
@@ -202,12 +202,12 @@ def create_app(test_config=None):
   categories in the left column will cause only questions of that 
   category to be shown. 
   '''
-  @app.route('/api/questions/<string:question_category>', methods=['GET'])
+  @app.route('/api/category/<int:question_category>/questions', methods=['GET'])
   def get_questions_by_categories(question_category):
     page = request.args.get('page', 1, type=int)
     start = (page -1) * QUESTIONS_PER_PAGE
     end = start + QUESTIONS_PER_PAGE
-    questions = Question.query.join(Category, Question.category == Category.id).filter(Category.type.ilike(question_category)).all()
+    questions = Question.query.filter(question_category == Question.category).all()
     formatted_questions = [question.format() for question in questions]
 
     if len(formatted_questions) == 0:
