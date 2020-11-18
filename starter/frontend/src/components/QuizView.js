@@ -24,7 +24,7 @@ class QuizView extends Component {
   componentDidMount(){
     var callback = 'c'+Math.floor((Math.random()*100000000)+1);
     $.ajax({
-      url: baseUrl + 'categories',
+      url: `${baseUrl}categories`,
       type: "GET",
       jsonpCallback: callback,
       dataType: 'json',
@@ -33,7 +33,7 @@ class QuizView extends Component {
         for (let i in result.categories) {
           cats[result.categories[i].id] = result.categories[i].type;
         }
-        this.setState({ 'categories': cats });
+        this.setState({ categories: cats })
         return;
       },
       error: (error) => {

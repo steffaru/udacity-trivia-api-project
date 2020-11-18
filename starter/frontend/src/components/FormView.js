@@ -3,6 +3,8 @@ import $ from 'jquery';
 
 import '../stylesheets/FormView.css';
 
+const baseUrl = "http://127.0.0.1:5000/api/";
+
 class FormView extends Component {
   constructor(props){
     super();
@@ -16,11 +18,18 @@ class FormView extends Component {
   }
 
   componentDidMount(){
+    var callback = 'c'+Math.floor((Math.random()*100000000)+1);
     $.ajax({
-      url: `/categories`, //TODO: update request URL
+      url: `${baseUrl}categories`,
       type: "GET",
+      jsonpCallback: callback,
+      dataType: 'json',
       success: (result) => {
-        this.setState({ categories: result.categories })
+        let cats = [];
+        for (let i in result.categories) {
+          cats[result.categories[i].id] = result.categories[i].type;
+        }
+        this.setState({ categories: cats })
         return;
       },
       error: (error) => {
@@ -34,7 +43,7 @@ class FormView extends Component {
   submitQuestion = (event) => {
     event.preventDefault();
     $.ajax({
-      url: '/questions', //TODO: update request URL
+      url: `${baseUrl}questions/create`, 
       type: "POST",
       dataType: 'json',
       contentType: 'application/json',
@@ -44,9 +53,9 @@ class FormView extends Component {
         difficulty: this.state.difficulty,
         category: this.state.category
       }),
-      xhrFields: {
-        withCredentials: true
-      },
+      // xhrFields: {
+      //   withCredentials: true
+      // },
       crossDomain: true,
       success: (result) => {
         document.getElementById("add-question-form").reset();

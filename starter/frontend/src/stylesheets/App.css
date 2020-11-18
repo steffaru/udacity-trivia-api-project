@@ -37,3 +37,44 @@ form {
   width: 80%;
   margin: auto;
 }
+.categories-list > ul {
+  list-style-type: none;
+  padding-inline-start: 0px;
+  display: flex;
+  justify-content: center;
+  flex-flow: column nowrap;
+}
+.categories-list > ul > li {
+  text-align: justify;
+  margin: 5px 0px;
+  line-height: 23px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 30px;
+}
+.categories-list > ul > li > img {
+  width: 30px !important;
+  margin: 5px;
+}
+
+form > #inputSearch {
+  line-height: 30px;
+  border-radius: 6px;
+  border-color: lightgray;
+}
+
+form > input[type=submit].button, div.button, div.show-answer {
+  width: 100px;
+  margin-top: 10px !important;
+  background-color: dodgerblue;
+  color: white;
+  padding: 9px 8px;
+  align-self: center;
+  border: 1px solid dodgerblue;
+  border-radius: 5px;
+  font-size: 15px;
+}
+#btnSearch´{
+  width: -webkit-fill-available;
+}

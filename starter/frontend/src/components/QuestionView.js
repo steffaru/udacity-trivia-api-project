@@ -99,7 +99,6 @@ class QuestionView extends Component {
       // xhrFields: {
       //   withCredentials: true
       // },
-      crossDomain: true,
       success: (result) => {
         this.setState({
           questions: result.questions,
@@ -116,10 +115,12 @@ class QuestionView extends Component {
 
   questionAction = (id) => (action) => {
     if(action === 'DELETE') {
-      if(window.confirm('are you sure you want to delete the question?')) {
+      if(window.confirm('Are you sure you want to DELETE the question?')) {
         $.ajax({
-          url: `/questions/${id}`, //TODO: update request URL
+          url: `${baseUrl}/questions/${id}`, //TODO: update request URL
           type: "DELETE",
+          dataType: 'json',
+          contentType: 'application/json',
           success: (result) => {
             this.getQuestions();
           },
@@ -141,7 +142,7 @@ class QuestionView extends Component {
             {Object.keys(this.state.categories).map((id, ) => (
               <li key={id} onClick={() => {this.getByCategory(id)}}>
                 {this.state.categories[id]}
-                <img className="category" src={`${this.state.categories[id]}.svg`}/>
+                <img className="category" src={`${this.state.categories[id].toLowerCase()}.svg`}/>
               </li>
             ))}
           </ul>
