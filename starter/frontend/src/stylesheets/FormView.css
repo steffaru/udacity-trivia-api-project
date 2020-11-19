@@ -1,5 +1,28 @@
+form.form-view {
+  justify-content: center;
+  align-items: center;
+}
+
 .form-view > label {
-  padding: 0px 0px 10px;
+  display: flex;
+  justify-content: space-between;
+  width: 350px;
+  flex-flow: row nowrap;
+  padding: 10px;
+  font-size: 18px !important;
+  align-items: center;
+}
+
+.form-view > label > input , .form-view > label > select {
+  height: 25px;
+  border: 1px solid lightgrey;
+  border-radius: 4px;
+  width: 100%;
+  margin: 0 0 0 10px;
+}
+
+.form-view > label > input[type=submit].button{ 
+  width: 35%;
 }
 
 #add-form {

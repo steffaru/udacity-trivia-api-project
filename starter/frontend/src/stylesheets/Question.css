@@ -55,7 +55,7 @@
 }
 
 .show-answer {
-  width: 100px;
+  width: auto;
   margin-top: 5px;
   background-color: dodgerblue;
   color: white;

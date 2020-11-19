@@ -26,7 +26,7 @@ class QuestionView extends Component {
   getQuestions = () => {
     var callback = 'c'+Math.floor((Math.random()*100000000)+1);
     $.ajax({
-      url: `${baseUrl}questions?page=${this.state.page}`, //TODO: update request URL
+      url: `${baseUrl}questions?page=${this.state.page}`,
       type: "GET",
       jsonpCallback: callback,
       dataType: 'json',
@@ -70,7 +70,7 @@ class QuestionView extends Component {
   getByCategory= (id) => {
     var callback = 'c'+Math.floor((Math.random()*100000000)+1);
     $.ajax({
-      url: `${baseUrl}category/${id}/questions`, //TODO: update request URL
+      url: `${baseUrl}category/${id}/questions`,
       type: "GET",
       jsonpCallback: callback,
       dataType: 'json',
@@ -90,7 +90,7 @@ class QuestionView extends Component {
 
   submitSearch = (searchTerm) => {
     $.ajax({
-      url: `${baseUrl}questions/search`, //TODO: update request URL
+      url: `${baseUrl}questions/search`,
       type: "POST",
       dataType: 'json',
       crossDomain: true,
@@ -117,7 +117,7 @@ class QuestionView extends Component {
     if(action === 'DELETE') {
       if(window.confirm('Are you sure you want to DELETE the question?')) {
         $.ajax({
-          url: `${baseUrl}/questions/${id}`, //TODO: update request URL
+          url: `${baseUrl}questions/${id}`,
           type: "DELETE",
           dataType: 'json',
           contentType: 'application/json',
@@ -142,7 +142,7 @@ class QuestionView extends Component {
             {Object.keys(this.state.categories).map((id, ) => (
               <li key={id} onClick={() => {this.getByCategory(id)}}>
                 {this.state.categories[id]}
-                <img className="category" src={`${this.state.categories[id].toLowerCase()}.svg`}/>
+                <img alt="icon" className="category" src={`${this.state.categories[id].toLowerCase()}.svg`}/>
               </li>
             ))}
           </ul>

@@ -57,15 +57,15 @@ class QuizView extends Component {
     var callback = 'c'+Math.floor((Math.random()*100000000)+1);
 
     $.ajax({
-      url: baseUrl + 'quizzes',
-      // dataType: 'jsonp',
-      // jsonpCallback: callback,
-      crossDomain: true,
+      url: `${baseUrl}quizzes`,
+      dataType: 'json',
+      jsonpCallback: callback,
+      // crossDomain: true,
       contentType: 'application/json',
       type: "POST",
       data: JSON.stringify({
         previous_questions: previousQuestions,
-        quiz_category: this.state.quizCategory
+        quiz_category: this.state.quizCategory.id
       }),
       // xhrFields: {
       //   withCredentials: true
@@ -153,7 +153,7 @@ class QuizView extends Component {
       <div className="quiz-play-holder">
         <div className="quiz-question">{this.state.currentQuestion.question}</div>
         <div className={`${evaluate ? 'correct' : 'wrong'}`}>{evaluate ? "You were correct!" : "You were incorrect"}</div>
-        <div className="quiz-answer">{this.state.currentQuestion.answer}</div>
+        <div className="quiz-answer">R: {this.state.currentQuestion.answer}</div>
         <div className="next-question button" onClick={this.getNextQuestion}> Next Question </div>
       </div>
     )
@@ -168,7 +168,7 @@ class QuizView extends Component {
           <div className="quiz-play-holder">
             <div className="quiz-question">{this.state.currentQuestion.question}</div>
             <form onSubmit={this.submitGuess}>
-              <input type="text" name="guess" onChange={this.handleChange}/>
+              <input id="guess" type="text" name="guess" onChange={this.handleChange}/>
               <input className="submit-guess button" type="submit" value="Submit Answer" />
             </form>
           </div>

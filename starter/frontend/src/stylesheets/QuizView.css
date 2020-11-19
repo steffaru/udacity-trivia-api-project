@@ -3,6 +3,10 @@
     margin-left: 10%;
     text-align: center;
     margin-top: 40px;
+    display: flex;
+    justify-content: center;
+    flex-flow: column nowrap;
+    align-items: center;
 }
 
 .category-holder {
@@ -20,28 +24,38 @@
 }
 
 .button {
-    width: 100px;
-    margin-top: 5px;
-    background-color: dodgerblue;
-    color: white;
-    padding: 3px 5px;
+    width: auto !important;
     align-self: center;
 }
 
 div.button {
-    margin-top: 20px;
-    margin-left: calc(50% - 50px);
+    margin-top: 10px;
 }
 
 .quiz-question {
-    margin: 12px;
-    font-size: 24px;
+    margin: 15px 10px;
+    font-size: 20px;
 }
-
+#guess {
+    height: 25px;
+    border: 1px solid lightgrey;
+    border-radius: 4px;
+    margin: 20px 0 15px 0;
+}
+.correct, .wrong, .quiz-answer{
+    font-weight: bold;
+    letter-spacing: .5px;
+    width: auto;
+    margin: 10px 0;
+    color: white;
+    padding: 6px 10px;
+}
 .correct {
-    color: green;
+    background-color: green;
 }
-
 .wrong {
-    color: red;
+    background-color: red;
+}
+.quiz-answer {
+    color: black;
 }
