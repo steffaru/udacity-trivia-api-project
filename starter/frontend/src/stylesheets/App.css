@@ -64,7 +64,7 @@ form > #inputSearch {
   border-color: lightgray;
 }
 
-form > input[type=submit].button, div.button, div#show_q {
+form > input[type=submit].button, div.button, div#show_q, #btnGuess {
   width: 100px;
   margin-top: 10px !important;
   background-color: dodgerblue;
