@@ -24,10 +24,11 @@
 }
 
 .button {
-    width: auto !important;
     align-self: center;
 }
-
+#btn-guess{
+    width: auto;
+}
 div.button {
     margin-top: 10px;
 }
