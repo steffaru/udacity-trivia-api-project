@@ -60,16 +60,13 @@ class QuizView extends Component {
       url: `${baseUrl}quizzes`,
       dataType: 'json',
       jsonpCallback: callback,
-      // crossDomain: true,
+      crossDomain: true,
       contentType: 'application/json',
       type: "POST",
       data: JSON.stringify({
         previous_questions: previousQuestions,
         quiz_category: this.state.quizCategory.id
       }),
-      // xhrFields: {
-      //   withCredentials: true
-      // },
       success: (result) => {
         this.setState({
           showAnswer: false,
@@ -81,7 +78,7 @@ class QuizView extends Component {
         return;
       },
       error: (error) => {
-        alert('Unable to load question. Please try your request again')
+        alert('Does not found more questions. Please try your request again')
         return;
       }
     })

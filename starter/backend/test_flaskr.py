@@ -18,12 +18,6 @@ class TriviaTestCase(unittest.TestCase):
         self.database_path = "postgres://{}:{}@{}/{}".format('postgres', '123456', 'localhost:5432', self.database_name)
         setup_db(self.app, self.database_path)
 
-        self.new_quetions = {
-            'question' : 'Which team won the NBA Championship in 2004?',
-            'answer' : 'Detroit Pistons',
-            'category' : 6,
-            'difficulty' : 3
-        }
 
         # binds the app to the current context
         with self.app.app_context():

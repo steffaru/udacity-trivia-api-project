@@ -22,20 +22,14 @@ def paginate_questions(request, questions):
 def create_app(test_config=None):
   app = Flask(__name__)
   setup_db(app)
-
-  '''
-  @TODO: Set up CORS. Allow '*' for origins. Delete the sample route after completing the TODOs
-  '''
   cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
-  '''
-  @TODO: Use the after_request decorator to set Access-Control-Allow
-  '''
+
   @app.after_request
   def after_request(response):
     response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization,true')
     response.headers.add('Access-Control-Allow-Methods', 'GET,PATCH,POST,DELETE,OPTIONS')
     return response
-    
+
   @app.route('/api/categories', methods=['GET'])
   def get_categories():
     try:
@@ -96,7 +90,7 @@ def create_app(test_config=None):
         'question': question_id
       })
     except:
-      abort(422)
+      abort(405)
   
 
   @app.route('/api/questions/create', methods=['POST'])
@@ -229,17 +223,13 @@ def create_app(test_config=None):
       "message": "bad request"
     }), 400
 
-  @app.errorhandler(500)
-  def internal_server_error(error):
+  @app.errorhandler(405)
+  def method_not_allowed(error):
     return jsonify({
       "success": False, 
-      "error": 500,
-      "message": "internal server error"
-    }), 500
-  
-  @app.route('/')
-  def index():
-    return jsonify({'message':'hola mortales'})
+      "error": 405,
+      "message": "Method Not Allowed"
+    }), 405
   
   return app
 

@@ -96,9 +96,6 @@ class QuestionView extends Component {
       crossDomain: true,
       contentType: 'application/json',
       data: JSON.stringify({searchTerm: searchTerm}),
-      // xhrFields: {
-      //   withCredentials: true
-      // },
       success: (result) => {
         this.setState({
           questions: result.questions,
@@ -107,7 +104,7 @@ class QuestionView extends Component {
         return;
       },
       error: (error) => {
-        alert('Unable to load questions. Please try your request again')
+        alert('That word does not exist. Please try again')
         return;
       }
     })
