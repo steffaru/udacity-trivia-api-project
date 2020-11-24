@@ -8,229 +8,252 @@ from models import setup_db, Question, Category
 
 QUESTIONS_PER_PAGE = 10
 
-def paginate_questions(request, questions):
-  page = request.args.get('page', 1, type=int)
-  start =  (page - 1) * QUESTIONS_PER_PAGE
-  end = start + QUESTIONS_PER_PAGE
 
-  questions = [question.format() for question in questions]
-  paginated_questions = questions[start:end]
-
-  return paginated_questions
-
-
+# Create APP and settings cors headers
 def create_app(test_config=None):
-  app = Flask(__name__)
-  setup_db(app)
-  cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
+    app = Flask(__name__)
+    setup_db(app)
+    cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 
-  @app.after_request
-  def after_request(response):
-    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization,true')
-    response.headers.add('Access-Control-Allow-Methods', 'GET,PATCH,POST,DELETE,OPTIONS')
-    return response
+    @app.after_request
+    def after_request(response):
+        response.headers.add('Access-Control-Allow-Headers',
+                             'Content-Type,Authorization,true')
+        response.headers.add('Access-Control-Allow-Methods',
+                             'GET,PATCH,POST,DELETE,OPTIONS')
+        return response
 
-  @app.route('/api/categories', methods=['GET'])
-  def get_categories():
-    try:
-      categories = Category.query.all()
-      formatted_categories = [category.format() for category in categories]
-      if len(formatted_categories) == 0:
-        abort(404)
+    # Paginate method
+    def paginate_questions(request, questions):
+        page = request.args.get('page', 1, type=int)
+        start = (page - 1) * QUESTIONS_PER_PAGE
+        end = start + QUESTIONS_PER_PAGE
 
-      return jsonify({
-        'success': True,
-        'categories': formatted_categories,
-        'total_categories': len(formatted_categories)
-      })
-    except:
-      abort(422)
+        questions = [question.format() for question in questions]
+        paginated_questions = questions[start:end]
 
-  @app.route('/api/questions', methods=['GET'])
-  def get_questions():
-    error_code = 422
-    try:
-      categories = Category.query.all()
-      questions = Question.query.all()
+        return paginated_questions
 
-      formatted_questions = paginate_questions(request, questions)
-      formatted_categories = [category.format() for category in categories]
+    # Questions API with pagination
 
-      if len(formatted_categories) == 0 or len(formatted_questions) == 0:
-        error_code = 404
-        abort(error_code)
-      
-      current_categories = []
-      for question in formatted_questions:
-        category = question['category']
-        if not (category in current_categories):
-          current_categories.append(category)
-      
-      return jsonify({
-        'success': True,
-        'questions': formatted_questions,
-        'total_questions': len(questions),
-        'current_category': current_categories,
-        'categories': formatted_categories
-      })
-    except:
-      abort(error_code)
+    @app.route('/api/questions', methods=['GET'])
+    def get_questions_with_pagination():
+        error_code = 422
+        try:
+            categories = Category.query.all()
+            questions = Question.query.all()
 
- 
-  @app.route('/api/questions/<int:question_id>', methods=['DELETE'])
-  def delete_question(question_id):
-    question = Question.query.filter_by(id=question_id).first()
-    if question is None:
-      abort(404)
-    try:
-      question.delete()
+            formatted_questions = paginate_questions(request, questions)
+            formatted_categories = [category.format()
+                                    for category in categories]
 
-      return jsonify({
-        'success': True,
-        'question': question_id
-      })
-    except:
-      abort(405)
-  
+            if len(formatted_categories) == 0 or len(formatted_questions) == 0:
+                error_code = 404
+                abort(error_code)
 
-  @app.route('/api/questions/create', methods=['POST'])
-  def new_question():
-    try:
-      body = request.get_json()
-      
-      new_question = body.get('question', None)
-      new_answer = body.get('answer', None)
-      new_category = body.get('category', None)
-      new_difficulty = body.get('difficulty', None)
+            current_categories = []
+            for question in formatted_questions:
+                category = question['category']
+                if not (category in current_categories):
+                    current_categories.append(category)
 
-      question = Question(question=new_question, answer=new_answer, category=new_category, difficulty=new_difficulty)
-      question.insert()
+            return jsonify({
+                'success': True,
+                'questions': formatted_questions,
+                'total_questions': len(questions),
+                'current_category': current_categories,
+                'categories': formatted_categories
+            })
+        except:
+            abort(error_code)
 
-      return jsonify({
-        'success': True,
-        'created': question.id
-      })
+    # Categories API
 
-    except:
-      abort(422)
+    @app.route('/api/categories', methods=['GET'])
+    def get_categories():
+        try:
+            categories = Category.query.all()
+            formatted_categories = [category.format()
+                                    for category in categories]
+            if len(formatted_categories) == 0:
+                abort(404)
 
+            return jsonify({
+                'success': True,
+                'categories': formatted_categories,
+                'total_categories': len(formatted_categories)
+            })
+        except:
+            abort(422)
 
-  @app.route('/api/questions/search', methods=['POST'])
-  def search_questions():
-    body = request.get_json()
-    search_term = body.get('searchTerm', None)
-    search = "%{}%".format(search_term.replace(" ", "\ "))
-    data = Question.query.filter(Question.question.ilike(search)).all()
-    formatted_questions = [q.format() for q in data]
+    # Delete Question API
 
-    if len(formatted_questions) == 0:
-      abort(404)
-    try:
-      current_categories = []
-      for question in formatted_questions:
-        category = question['category']
-        if not (category in current_categories):
-          current_categories.append(category)
+    @app.route('/api/questions/<int:question_id>', methods=['DELETE'])
+    def delete_question(question_id):
+        question = Question.query.filter_by(id=question_id).first()
+        if question is None:
+            abort(404)
+        try:
+            question.delete()
 
+            return jsonify({
+                'success': True,
+                'question': question_id
+            })
+        except:
+            abort(405)
 
-      return jsonify({
-        'success': True,
-        'questions': formatted_questions,
-        'totalQuestions': len(formatted_questions),
-        'current_categories': current_categories,
-        'search': search_term
-      })
-    except:
-      abort(422)
+    # Create Question API
 
-  @app.route('/api/category/<int:question_category>/questions', methods=['GET'])
-  def get_questions_by_categories(question_category):
-    error_code = 422
-    try:
-      questions = Question.query.filter(question_category == Question.category).all()
-      formatted_questions = paginate_questions(request, questions)
+    @app.route('/api/questions/create', methods=['POST'])
+    def new_question():
+        try:
+            body = request.get_json()
 
-      if len(formatted_questions) == 0:
-        error_code = 404
-        abort(error_code)
+            new_question = body.get('question', None)
+            new_answer = body.get('answer', None)
+            new_category = body.get('category', None)
+            new_difficulty = body.get('difficulty', None)
 
-      current_categories = []
-      for question in formatted_questions:
-        category = question['category']
-        if not (category in current_categories):
-          current_categories.append(category)
+            question = Question(
+                question=new_question,
+                answer=new_answer,
+                category=new_category,
+                difficulty=new_difficulty)
+            question.insert()
 
-      return jsonify({
-        'success': True,
-        'questions': formatted_questions,
-        'total_questions': len(formatted_questions),
-        'current_categories': current_categories,
-      })
-    except:
-      abort(error_code)
+            return jsonify({
+                'success': True,
+                'created': question.id
+            })
 
-  
-  @app.route('/api/quizzes', methods=['POST'])
-  def post_quiz_questions():
-    code = 422
-    try:
-      request_quiz = request.get_json()
+        except:
+            abort(422)
 
-      previous_questions = request_quiz.get('previous_questions', None)
-      quiz_category = request_quiz.get('quiz_category', None)
+    # Get Questions by Category API
 
-      question = Question.query
-      question = question.filter(~Question.id.in_(previous_questions))
+    @app.route(
+        '/api/category/<int:question_category>/questions',
+        methods=['GET']
+        )
+    def get_questions_by_categories(question_category):
+        error_code = 422
+        try:
+            questions = Question.query.filter(
+                question_category == Question.category).all()
+            formatted_questions = paginate_questions(request, questions)
 
-      if quiz_category != 0:
-        question = question.filter(Question.category == quiz_category)
+            if len(formatted_questions) == 0:
+                error_code = 404
+                abort(error_code)
 
-      questions_random = question.order_by(func.random()).first()
+            current_categories = []
+            for question in formatted_questions:
+                category = question['category']
+                if not (category in current_categories):
+                    current_categories.append(category)
 
-      if questions_random is None:
-        code = 404
-        abort(code)
+            return jsonify({
+                'success': True,
+                'questions': formatted_questions,
+                'total_questions': len(formatted_questions),
+                'current_categories': current_categories,
+            })
+        except:
+            abort(error_code)
 
-      return jsonify({
-        'success': True,
-        'question': questions_random.format(),
-        'previous_question': previous_questions
-      })
-    except:
-      abort(code)
+    # Get Question by Search Term  API
 
-  @app.errorhandler(404)
-  def not_found(error):
-    return jsonify({
-      "success": False, 
-      "error": 404,
-      "message": "resource not found"
-    }), 404
+    @app.route('/api/questions/search', methods=['POST'])
+    def search_questions():
+        body = request.get_json()
+        search_term = body.get('searchTerm', None)
+        search = "%{}%".format(search_term.replace(" ", "\ "))
+        data = Question.query.filter(Question.question.ilike(search)).all()
+        formatted_questions = [question.format() for question in data]
 
-  @app.errorhandler(422)
-  def unprocessable(error):
-    return jsonify({
-      "success": False, 
-      "error": 422,
-      "message": "unprocessable"
-    }), 422
+        if len(formatted_questions) == 0:
+            abort(404)
+        try:
+            current_categories = []
+            for question in formatted_questions:
+                category = question['category']
+                if not (category in current_categories):
+                    current_categories.append(category)
 
-  @app.errorhandler(400)
-  def bad_request(error):
-    return jsonify({
-      "success": False, 
-      "error": 400,
-      "message": "bad request"
-    }), 400
+            return jsonify({
+                'success': True,
+                'questions': formatted_questions,
+                'totalQuestions': len(formatted_questions),
+                'current_categories': current_categories,
+                'search': search_term
+            })
+        except:
+            abort(422)
 
-  @app.errorhandler(405)
-  def method_not_allowed(error):
-    return jsonify({
-      "success": False, 
-      "error": 405,
-      "message": "Method Not Allowed"
-    }), 405
-  
-  return app
+    # Get Question to Play Quiz API
 
-    
+    @app.route('/api/quizzes', methods=['POST'])
+    def post_quiz_questions():
+        code = 422
+        try:
+            request_quiz = request.get_json()
+
+            previous_questions = request_quiz.get('previous_questions')
+            quiz_category = request_quiz.get('quiz_category')
+
+            question = Question.query
+            question = question.filter(~Question.id.in_(previous_questions))
+
+            if quiz_category != 0:
+                question = question.filter(Question.category == quiz_category)
+
+            questions_random = question.order_by(func.random()).first()
+
+            if not questions_random:
+              return(jsonify({
+                'success': True,
+                'previous_question': len(previous_questions)
+                }))
+
+            return jsonify({
+                'success': True,
+                'question': questions_random.format(),
+                'previous_question': previous_questions
+            })
+        except:
+            abort(code)
+
+    @app.errorhandler(404)
+    def not_found(error):
+        return jsonify({
+            "success": False,
+            "error": 404,
+            "message": "resource not found"
+        }), 404
+
+    @app.errorhandler(422)
+    def unprocessable(error):
+        return jsonify({
+            "success": False,
+            "error": 422,
+            "message": "unprocessable"
+        }), 422
+
+    @app.errorhandler(400)
+    def bad_request(error):
+        return jsonify({
+            "success": False,
+            "error": 400,
+            "message": "bad request"
+        }), 400
+
+    @app.errorhandler(405)
+    def method_not_allowed(error):
+        return jsonify({
+            "success": False,
+            "error": 405,
+            "message": "Method Not Allowed"
+        }), 405
+
+    return app

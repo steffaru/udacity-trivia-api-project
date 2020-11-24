@@ -93,7 +93,7 @@ The API return three types when request fall:
 **GET /api/questions**
 
  - General:
-	 - Get all questions with the paginated. Returns all questions categories, current_category, questions, success, total_questions.
+	 - Get all questions with the paginated. Returns all questions,total_questions number, all categories, current_category and success value.
 	 -  `curl -X GET http://localhost:5000/api/questions`
   
 ```
@@ -192,7 +192,7 @@ The API return three types when request fall:
    **POST/api/questions/create**
 
  - General:
-	 - Creates a new question using question, answer, category and difficulty . Returns id of the created question, success value.
+	 - Creates a new question using question, answer, category and difficulty values. Returns id of the created question, success value.
 	 -  `curl -X POST -d '{answer:"Maya quizzes",category:3,difficulty:4,question:"Whose autobiography is entitled"}' -H 'Content-type:application/json' http://localhost:5000/api/questions/create`
 
 ```
@@ -206,7 +206,7 @@ The API return three types when request fall:
    **POST/api/questions/search**
 
  - General:
-	 - Get an array of question with the keyword determined by the searchTerm. The response have: questions, totalQuestions, current_categories and search. 
+	 - Get an array of question with the keyword determined by the searchTerm. The response have: questions, totalQuestions, current_categories and search and success value.
 	 -  `curl -X POST -d '{"searchTerm":"What"}' -H 'Content-type:application/json' http://localhost:5000/api/questions/search`
 
 ```
@@ -239,7 +239,7 @@ The API return three types when request fall:
    **GET/api/category/\<question_category\>/questions**
 
  - General:
-	 - Get the questions by category determined by the id question_category, the resutl is an array with the paginated questions. The response have: success, questions, total_questions and current_categories.
+	 - Get the questions by category determined by the id question_category, the resutl is an array with the paginated questions. The response have: success, questions, total_questions and current_categories and success value.
 	 -  `curl -X GET http://localhost:5000/api/category/\<question_category\>/questions`
 
 ```
@@ -271,7 +271,7 @@ The API return three types when request fall:
    **POST /api/quizzes**
 
  - General:
-	 - Get one random question determined by the quiz_category and not in the previous_questions array. To have one without category, quiz_category need to be 0. The response have: success, question, previous_question
+	 - Get one random question determined by the quiz_category and not in the previous_questions array. To have one without category, quiz_category need to be 0. The response have: success value, question selected and previous_question array.
 	 -  `curl -X POST -d '{"previous_questions":[1,2],"quiz_category":1}' -H 'Content-type:application/json' http://localhost:5000/api/quizzes`
 
 ```
@@ -288,5 +288,5 @@ The API return three types when request fall:
 }
 ```
 
-## Authors 
+## Author 
 Estefania Aranguren

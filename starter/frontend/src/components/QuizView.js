@@ -29,11 +29,11 @@ class QuizView extends Component {
       jsonpCallback: callback,
       dataType: 'json',
       success: (result) => {
-        let cats = [];
+        let categoriesArray = [];
         for (let i in result.categories) {
-          cats[result.categories[i].id] = result.categories[i].type;
+            categoriesArray[result.categories[i].id] = result.categories[i].type;
         }
-        this.setState({ categories: cats })
+        this.setState({ categories: categoriesArray })
         return;
       },
       error: (error) => {
@@ -78,7 +78,8 @@ class QuizView extends Component {
         return;
       },
       error: (error) => {
-        alert('Does not found more questions. Please try your request again')
+        alert('Unable to load question. Please try your request again')
+        this.renderPlay(this.renderFinalScore())
         return;
       }
     })
@@ -131,7 +132,9 @@ class QuizView extends Component {
   renderFinalScore(){
     return(
       <div className="quiz-play-holder">
-        <div className="final-header"> Your Final Score is {this.state.numCorrect}</div>
+        <div className="final-header"> 
+          <h2>Your Final Score is: {this.state.numCorrect}</h2>
+        </div>
         <div className="play-again button" onClick={this.restartGame}> Play Again? </div>
       </div>
     )
