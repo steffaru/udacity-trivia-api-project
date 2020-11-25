@@ -78,7 +78,7 @@ class TriviaTestCase(unittest.TestCase):
 
     # DELETE QUESTION
     def test_delete_question(self):
-        res = self.client().delete('http://localhost:5000/api/questions/17')
+        res = self.client().delete('http://localhost:5000/api/questions/13')
         data = json.loads(res.data)
 
         question = Question.query.filter(Question.id == 1).one_or_none()
@@ -172,12 +172,11 @@ class TriviaTestCase(unittest.TestCase):
 
     # QUIZ QUESTION
     def test_post_quiz_questions(self):
-        quiz_category = 2
         res = self.client().post(
             'http://localhost:5000/api/quizzes',
             json={
                 'previous_questions': [1, 2],
-                'quiz_category': quiz_category},
+                'quiz_category': 5},
             headers={'Content-Type': 'application/json'})
         data = json.loads(res.data)
 
@@ -186,20 +185,16 @@ class TriviaTestCase(unittest.TestCase):
         self.assertTrue(data['question'])
         self.assertTrue(data['previous_question'])
 
-    def test_404_if_previous_question_doesnt_exist(self):
-        previous_questions = []
-        quiz_category = 1000
+    def test_422_if_quiz_is_unprocessable(self):
         res = self.client().post(
             'http://localhost:5000/api/quizzes',
-            json={
-                'previous_questions': previous_questions,
-                'quiz_category': quiz_category},
+            json={},
             headers={'Content-Type': 'application/json'})
         data = json.loads(res.data)
 
-        self.assertEqual(res.status_code, 404)
+        self.assertEqual(res.status_code, 422)
         self.assertEqual(data['success'], False)
-        self.assertEqual(data['message'], 'resource not found')
+        self.assertEqual(data['message'], 'unprocessable')
 
 # Make the tests conveniently executable
 if __name__ == "__main__":

@@ -211,10 +211,10 @@ def create_app(test_config=None):
             questions_random = question.order_by(func.random()).first()
 
             if not questions_random:
-              return(jsonify({
-                'success': True,
-                'previous_question': len(previous_questions)
-                }))
+                return(jsonify({
+                    'success': True,
+                    'previous_question': len(previous_questions)
+                    }))
 
             return jsonify({
                 'success': True,
