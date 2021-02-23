@@ -1,6 +1,6 @@
 # Full Stack Trivia API Backend 🐱‍💻
 
-This project is a **Virtual Trivia** that I do myself for **Udacity**. In this you can add questions, give them answers, category and difficulty, delete questions and play with the questions of the questionnaire guessing the answer. As part of the Fullstack Nanodegree, this serves as practice for **Course 2: API Development and Documentation**. In this project, I applied API endpoint structuring, implementation, and formatting with knowledge of HTTP and APi development best practices.
+This project is a **Virtual Trivia** that I do myself for **Udacity**. In this you can add questions, give them answers, category and difficulty, delete questions and play with the questions of the questionnaire guessing the answer. As part of the Fullstack Nanodegree, this serves as practice for **Course 3: API Development and Documentation**. In this project, I applied API endpoint structuring, implementation, and formatting with knowledge of HTTP and APi development best practices.
 
 **Ready to run it, Let's get started 🤓**
  
